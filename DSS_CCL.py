@@ -209,7 +209,7 @@ class DSS_tools:
             self.variance_mm()
             self.skewness_mm()
             # Galaxy Kernel # Need further comparisons
-            chi,self.fgw = ccl.tracers.get_density_kernel(self.cosmo,(self.zs,self.nz))
+            chi,self.fgw = ccl.tracers.get_density_kernel(self.cosmo,(self.zs,self.nzl))
             self.deltaU2_var = self.moment_integrand(dchi,self.fgw**2,self.var)
             self.deltaU3_skew= self.moment_integrand(dchi,self.fgw**3,self.skw)
             # self.reset = False
@@ -217,13 +217,13 @@ class DSS_tools:
         if self.update == True:
             #self.cvr = np.zeros((rtl,zl))
             if self.bg == 'Gamma_t': # Lensing Kernel
-                chi,self.bgw = ccl.tracers.get_lensing_kernel(self.cosmo,(self.zs,self.nz))
+                chi,self.bgw = ccl.tracers.get_lensing_kernel(self.cosmo,(self.zs,self.nzs))
                 self.covariance_mm()
             elif self.bg == 'y': # tSZ Kernel
                 self.bgw = 4.01710079e-06*az
                 self.covariance_mp()
             elif self.bg == 'cmbl':
-                chi,self.bgw = ccl.tracers.get_kappa_kernel(self.cosmo,(self.zs,self.nz),500)
+                chi,self.bgw = ccl.tracers.get_kappa_kernel(self.cosmo,(self.zs,self.nzs),500)
                 self.covariance_mm()
             #self.update = False
             self.coskewness_mm()
@@ -330,7 +330,7 @@ class DSS_tools:
         return None
 
     # Compute observables
-    def stat(self,zs,nzs,reset=False,update=False,bg=None):
+    def stat(self,zs,nz_lens,nz_source,reset=False,update=False,bg=None):
         self.reset = reset;self.update = update
         if update == True:
             if bg != None:
@@ -340,7 +340,8 @@ class DSS_tools:
             I_cent = self.MIP_cen
         except:
             self.zs = zs
-            self.nz = nzs
+            self.nzl = nz_lens
+            self.nzs = nz_source
             self.posterior_org()
 
         I_maxs = self.MIP_max;I_mins = self.MIP_min;I_cent = self.MIP_cen       # Mean Inside Profile
@@ -352,9 +353,3 @@ class DSS_tools:
             B_vath = I_cent+I_diff
 
         return np.rad2deg(T_cent)*60.0,B_vath
-
-
-            
-        
-        
-        
