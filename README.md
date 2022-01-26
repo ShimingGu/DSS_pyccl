@@ -3,6 +3,10 @@ A fast code that borrows pyccl to compute density split statistics with differen
 
 
 cosmo = ccl.Cosmology(...)
+
 dss = DSS_tools(cosmo,z,theta,smoothing_scale,**kwargs)
+
 dss.halo_setups()
-dss.stat(z,nz,reset=True,update=True) # gives angular scales and corresponding density split statistics
+
+dss.stat(z,nz,reset=True,update=True) 
+# gives angular scales and corresponding density split statistics
